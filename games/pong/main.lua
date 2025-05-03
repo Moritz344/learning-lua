@@ -7,15 +7,17 @@ function love.load()
   player.y = 300
   player.width = 10
   player.height = 50
-  player.speed = 3
+  player.speed = 5
+  player.score = 0
 
   WindowMinHeight = 0
   WindowMaxHeight = 550
 
   player_2 = {}
+  player_2.score = 0
   player_2.x = 600
   player_2.y = 300
-  player_2.speed = 3
+  player_2.speed = 5
   
   ball = {}
   ball.x = 400
@@ -23,6 +25,10 @@ function love.load()
   ball.speed_x = 3
   ball.speed_y = 3
   ball.size = 10
+
+  myFont = love.graphics.newFont(32)
+  love.graphics.setFont(myFont)
+
 
 
   ball.checkCollision = function(ball,paddle)
@@ -65,8 +71,10 @@ function ballCollision()
   end
 
   if ball.x > 800 then
+    player.score = player.score + 1
     ball.speed_x = ball.speed_x * -1
   elseif ball.x < 10 then
+    player_2.score = player_2.score + 1
     ball.speed_x = ball.speed_x * -1
   end
 
@@ -79,13 +87,40 @@ function ballCollision()
 end
 
 function player_2KI()
-  if ball.y > player_2.y then
-    player_2.y = player_2.y + player_2.speed
-  elseif ball.y < player_2.y then
-    player_2.y = player_2.y - player_2.speed
+  
+  local slower_value = math.random(0,5)
+  local start_moving = math.random(200,500)
+
+
+  if ball.x > start_moving then  
+    if ball.y + slower_value > player_2.y then
+      player_2.y = player_2.y + player_2.speed
+    elseif ball.y - slower_value < player_2.y then
+      player_2.y = player_2.y - player_2.speed
+    end
   end
+
+  if ball.x > player_2.x then
+    player_2.speed = 0
+  else 
+    player_2.speed = 4
+  end
+
+  print(ball.x,player_2.x)
+
+  if ball.y == player_2.y and ball.x == player_2.x then
+    ball.x = 500
+    ball.y = 200
+  end
+
 end
 
+function resetScore()
+  if player.score == 5 or player_2.score == 5 then
+    player.score = 0
+    player_2.score = 0
+  end
+end
 
 function love.update(dt)
     playerMovement()
@@ -96,6 +131,8 @@ function love.update(dt)
     ballMovement()
     ballCollision()
 
+    resetScore()
+
 end
 
 function love.draw()
@@ -103,6 +140,10 @@ function love.draw()
   love.graphics.rectangle("fill",player.x,player.y,player.width,player.height)
   love.graphics.rectangle("fill",player_2.x,player_2.y,player.width,player.height)
   --
+  
+  love.graphics.print(player.score,160,10)
+  love.graphics.print(player_2.score,640,10)
+
   -- ball
   love.graphics.circle("fill",ball.x,ball.y,ball.size)
 
