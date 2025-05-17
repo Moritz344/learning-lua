@@ -39,7 +39,7 @@ function love.load()
 
     ant.direction = "up"
 
-    ant.speed = map.blockSize
+    ant.speed = map.blockSize 
     ant.Size = 10
 
     
