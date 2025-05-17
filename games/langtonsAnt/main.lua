@@ -1,11 +1,5 @@
 
 -- Langtons Ant
--- Wenn die ameise auf einem weißen block ist dann:a
-   -- 90 grad nach rechts drehen
-   -- Zelle schwarz
-   -- bewegt sich ein Feld forwärts
-
--- Anfangs block : weiß
 
 
 function love.load()
